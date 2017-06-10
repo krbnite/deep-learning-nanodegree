@@ -26,14 +26,46 @@ from [research.fb.com](https://research.fb.com/downloads/babi/).
 Oh, in the links, there is a link to the 
 [how\_to\_make\_a\_chatbot](https://github.com/llSourcell/How_to_make_a_chatbot) challenge.
 
+## Dynamic Memory Networks
+As of mid-year 2017, DMNs are considered state-of-the-art in Q&A systems.  
+Their utility stems from using two types of memory modules: semanatic and episodic.  
+The two modules are inspired by [episodic memory](https://en.wikipedia.org/wiki/Episodic_memory)
+and [semantic memory](https://en.wikipedia.org/wiki/Semantic_memory) as they relate
+to the [hippocampus](https://en.wikipedia.org/wiki/Hippocampus).
+
+> "Semantic memory refers to general world knowledge that we have accumulated throughout our lives. Semantic memory is distinct from episodic memory, which is our memory of experiences and specific events that occur during our lives, from which we can recreate at any given point.[3] For instance, semantic memory might contain information about what a cat is, whereas episodic memory might contain a specific memory of petting a particular cat."  --Dr. WizzlePizzle, PhDizzle
+
+
 ## GRU Notes
-u[i] = sigmoid(W[u]x[i] + U[u]h[i-1] + b[u])
-r[i] = sigmoid(W[r]x[i] + U[r]h[i-1] + b[r])
-g[i] = tanh(W[g]x[i] + r[i]\*U[g]h[i-1] + b[g])
-h[i] = u[i]\*g[i] + (1-u[i])\*h[i-1]
+A GRU cell is like a LSTM cell, but uses only 2 gates ("update" and "reset"), making it more computationally
+efficient.
 
-![gru-vs-lstm](/assets/GRU-vs-LSTM.png)
+* Update Gate: u[i] = sigmoid(W[u]x[i] + U[u]h[i-1] + b[u])
+* r[i] = sigmoid(W[r]x[i] + U[r]h[i-1] + b[r])
+* g[i] = tanh(W[g]x[i] + r[i]\*U[g]h[i-1] + b[g])
+* h[i] = u[i]\*g[i] + (1-u[i])\*h[i-1]
 
+![gru-vs-lstm](./assets/GRU-vs-LSTM.png)
+
+The update gate is a single-layer neural network. It can learn to ignore the current time stop, or pass
+it on through. 
+
+## Input Module
+Fact and Question vector are extracted form the Input Module.
+
+## Question Module
+Proceses the question posed to it word by word. Uses same GRU as the Input Module. 
+
+## Episodic Memory Module
+The fact and question vectors extracted from the Input Module are input into the Episodic
+Memory Module (EMM).  The EMM is composed of two GRUs: an inner GRU and an outer GRU.  
+
+The inner GRU generates "episodes" by passing over the fact vectors using an attention
+function, which scores each fact between 0 and 1, to decide which facts to ignore (the ones
+with low scores).  From this, the inner GRU puts together an episode, which can be thought of 
+as a summary of its findings.  The outer GRU takes in this episode.  The inner GRU then does
+another pass, and composes another episode for the outer GRU. Multiple passes allows the EMM
+to really focus on what is important.
 
 ## Papers
 2015: Weston, Chopra, & Borders: [Memory Networks](https://arxiv.org/pdf/1410.3916.pdf)
