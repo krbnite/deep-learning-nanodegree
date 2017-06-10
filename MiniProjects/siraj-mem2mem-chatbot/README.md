@@ -26,6 +26,15 @@ from [research.fb.com](https://research.fb.com/downloads/babi/).
 Oh, in the links, there is a link to the 
 [how\_to\_make\_a\_chatbot](https://github.com/llSourcell/How_to_make_a_chatbot) challenge.
 
+## GRU Notes
+u[i] = sigmoid(W[u]x[i] + U[u]h[i-1] + b[u])
+r[i] = sigmoid(W[r]x[i] + U[r]h[i-1] + b[r])
+g[i] = tanh(W[g]x[i] + r[i]\*U[g]h[i-1] + b[g])
+h[i] = u[i]\*g[i] + (1-u[i])\*h[i-1]
+
+![gru-vs-lstm](/assets/GRU-vs-LSTM.png)
+
+
 ## Papers
 2015: Weston, Chopra, & Borders: [Memory Networks](https://arxiv.org/pdf/1410.3916.pdf)
 
