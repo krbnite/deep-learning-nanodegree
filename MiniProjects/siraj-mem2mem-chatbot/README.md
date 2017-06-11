@@ -26,6 +26,53 @@ from [research.fb.com](https://research.fb.com/downloads/babi/).
 Oh, in the links, there is a link to the 
 [how\_to\_make\_a\_chatbot](https://github.com/llSourcell/How_to_make_a_chatbot) challenge.
 
+## Why use Memory Networks?
+Say you want to tell a machine a story, then ask it questions about the story.  How might you
+do this?
+
+Theoretically, some type of recurrent neural network (RNN) could do this, however Weston et al (2015)
+note that the memory in an actual RNN is "typically too small, and is not compartmentalized enough
+to accurately remember facts from the past."  
+
+## Memory Networks Defined
+A Memory Network (MN) consists of an memory vector, m[i], and 4 components: the Input Feature Map (I),
+the Generalization (G), the Output Feature map (O), and the Response (R).  Assuming a machine is endowed
+with a Memory Network, these 4 components can be conceptualized as follows:
+
+* I: the machine internalizes the input from its environment in a way it can better understand (e.g., the conversion of a sentence to a sequence of embedded vectors).
+* G: the machine takes a moment to reflect on its past given some new input, and how this new information might be useful going forward.
+* O: using what relevant information it can remember, the machine makes a decision on how to respond to the current situation.
+* R: the machine externalizes its decision, acting upon the environment in an effective manner (e.g., the conversion of a sequence of embedded vectors to a setence).
+
+The flow of events written in R's magrittr fashion might look something like:
+
+```r
+# Wake up, lazy machine!
+understanding_of_self_and_environment = load_current_identity()
+
+# See the machine interact w/ environment
+environmental_stimuli = observe_environment()
+while(there_is(environmental_stimuli)) {
+    environmental_stimuli  %>%       # Pipe stimuli into I
+        interpret_stimuli()    %T>%      # T-Pipe I into G & O
+        reflect_on_and_reevaluate(   
+            understanding_of_self_and_environment,
+            update=TRUE
+        )  %>%
+        decide_response_based_on_updated( 
+          understanding_of_self_and_environment
+        )  %>%                           # Pipe decision (O) into R
+        act_on_decision()    
+    environmental_stimuli = observe_environment()
+}
+```
+
+
+## What is MemNN?
+In its full generality, the components (I,G,R,O) of a memory network can be any type of machine
+learning technique that makes sense.  However, the popular implementation uses neural networks
+for each component, and is referred to as MemNN.
+
 ## Dynamic Memory Networks
 As of mid-year 2017, DMNs are considered state-of-the-art in Q&A systems.  
 Their utility stems from using two types of memory modules: semanatic and episodic.  
