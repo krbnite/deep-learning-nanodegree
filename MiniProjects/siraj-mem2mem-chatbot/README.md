@@ -86,6 +86,7 @@ to the [hippocampus](https://en.wikipedia.org/wiki/Hippocampus).
 
 > "Semantic memory refers to general world knowledge that we have accumulated throughout our lives. Semantic memory is distinct from episodic memory, which is our memory of experiences and specific events that occur during our lives, from which we can recreate at any given point.[3] For instance, semantic memory might contain information about what a cat is, whereas episodic memory might contain a specific memory of petting a particular cat."  --Dr. WizzlePizzle, PhDizzle
 
+![dynamic memory network](./assets/dynamic-memory-network)
 
 ## GRU Notes
 A Gated Recurrent Unit (GRU) is like a LSTM cell, but uses only 2 gates ("update" and "reset"), making it more computationally
@@ -110,6 +111,8 @@ Proceses the question posed to it word by word. Uses same GRU as the Input Modul
 ## Episodic Memory Module
 The fact and question vectors extracted from the Input Module are input into the Episodic
 Memory Module (EMM).  The EMM is composed of two GRUs: an inner GRU and an outer GRU.  
+
+![episodes and attention](./assets/episode.png)
 
 The inner GRU generates "episodes" by passing over the fact vectors using an attention
 function, which scores each fact between 0 and 1, to decide which facts to ignore (the ones
