@@ -26,6 +26,9 @@ from [research.fb.com](https://research.fb.com/downloads/babi/).
 Oh, in the links, there is a link to the 
 [how\_to\_make\_a\_chatbot](https://github.com/llSourcell/How_to_make_a_chatbot) challenge.
 
+### GloVe Vectors
+https://nlp.stanford.edu/projects/glove/
+
 ## Why use Memory Networks?
 Say you want to tell a machine a story, then ask it questions about the story.  How might you
 do this?
@@ -74,7 +77,8 @@ learning technique that makes sense.  However, the popular implementation uses n
 for each component, and is referred to as MemNN.
 
 ## Dynamic Memory Networks
-As of mid-year 2017, DMNs are considered state-of-the-art in Q&A systems.  
+This is a special time of MemNN introduced in [Kumar et al (2015)](https://arxiv.org/abs/1506.07285)
+and, as of mid-year 2017, considered state-of-the-art in Q&A systems.  
 Their utility stems from using two types of memory modules: semanatic and episodic.  
 The two modules are inspired by [episodic memory](https://en.wikipedia.org/wiki/Episodic_memory)
 and [semantic memory](https://en.wikipedia.org/wiki/Semantic_memory) as they relate
@@ -84,7 +88,7 @@ to the [hippocampus](https://en.wikipedia.org/wiki/Hippocampus).
 
 
 ## GRU Notes
-A GRU cell is like a LSTM cell, but uses only 2 gates ("update" and "reset"), making it more computationally
+A Gated Recurrent Unit (GRU) is like a LSTM cell, but uses only 2 gates ("update" and "reset"), making it more computationally
 efficient.
 
 * Update Gate: u[i] = sigmoid(W[u]x[i] + U[u]h[i-1] + b[u])
