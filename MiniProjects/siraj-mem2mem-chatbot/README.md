@@ -3,6 +3,15 @@
 The goal is to build a chatbot that can answer any question you give it.  
 We will attempt to do this using [Keras](https://keras.io/).
 
+## Quick 1-2
+This mini-project is centered around Siraj's video, 
+[How to Make a Chatbot](https://www.youtube.com/watch?v=t5qgjJIBy9g), and the 
+corresponding [Coding Challenge](https://github.com/llSourcell/How_to_make_a_chatbot)
+for the Deep Learning Nanodegree.
+
+I want to come back and clean these notes up, and also fully complete
+the coding challenge.  For now, I have 
+
 ## Motivation
 Google is great, but when you're wondering about the tail region of the
 magnetosphere, an expert chatbot might be better!  Research papers are great:
