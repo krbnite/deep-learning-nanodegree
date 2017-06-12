@@ -3,3 +3,5 @@ This is just a space to collect things...like a horder.  Maybe one day I'll get 
 * [Distill](http://distill.pub/about/):  Cool ML publication I saw on OpenAI's blog
 
 * [Unsupervised Sentiment Neuron](https://blog.openai.com/unsupervised-sentiment-neuron/): b/c small data is better than big data :-p
+
+* [Hyperparameter Estimation (e.g., GridSearch)](http://scikit-learn.org/stable/modules/grid_search.html)
