@@ -13,6 +13,16 @@ given its present.
 
 A Markov Model is a model that has the Markov property. 
 
+Pong is a type of Markovian model known as a Markov decision process [MDP],
+and can be represented as a graph where each node represents a unique game
+state and each edge represents transitions between the states.  A transition
+occurs when an action is taken, which is selected using a policy.  Often,
+to optimize between (1) leveraging one's best-known policy and knowledge of the
+state space (exploitation) and (2) keeping an open mind concerning better policies
+and more rewarding paths through the state space, one uses a policy with some
+randomization (i.e., stochasticity) built in.  (No need to recreate the wheel:
+[read this](http://karpathy.github.io/2016/05/31/rl/)!)
+
 ## History Buff Conciliation
 Ok, it's not that history doesn't matter in a Markov process.  It's that
 you can encode all the relevant history in the current state.  
@@ -52,17 +62,40 @@ just approximating it.  Can't we just use another approximation technique?
 This is where deep learning comes into reinforcement learning, and the answer is,
 "Yes we can!"
 
+## Policy Gradients
+There are two algorithms in RL that crop up everywhere you look: policy gradients (PGs)
+and Q-learning.  [Karpathy says](http://karpathy.github.io/2016/05/31/rl/), "PG is preferred 
+because it is end-to-end: there’s an explicit policy and a principled approach that directly 
+optimizes the expected reward."
+
+## DQN
+This is an alternative to using policy gradients, popularized as an [ATARI game-playing master](http://www.nature.com/nature/journal/v518/n7540/abs/nature14236.html).  
+though it is a "better-known RL algorithm," [Karpathy says](http://karpathy.github.io/2016/05/31/rl/),
+"Q-Learning is not a great algorithm," and that "most people prefer to use Policy Gradients, 
+including the authors of the original DQN paper."
+
+
+## Competitor of DRL: Evolution Strategies
+* https://blog.openai.com/evolution-strategies/
+
 ## Some Links
 * [Simple Reinforcement Learning with Tensorflow, Part 0: Q-Learning with Tables and Neural Networks](https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0)
 * [Demystifying Deep Learning](http://neuro.cs.ut.ee/demystifying-deep-reinforcement-learning/)
 * [DRL: From Pong to Pixels (Karpathy)](http://karpathy.github.io/2016/05/31/rl/)
 * [The OpenAI Gym](https://blog.openai.com/openai-gym-beta/)
+* [OpenAI Gym Docs](https://gym.openai.com/docs)
+* [MinPy: RL w/ Policy Gradients](http://minpy.readthedocs.io/en/latest/tutorial/rl_policy_gradient_tutorial/rl_policy_gradient.html)
+* [Deep Deterministic Policy Gradients in TensorFlow](http://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html)
+* [Simple reinforcement learning methods to learn CartPole](http://kvfrans.com/simple-algoritms-for-solving-cartpole/)
 
 ## Some Video
 * [David Silver's DRL Lecture](http://videolectures.net/rldm2015_silver_reinforcement_learning/)
 * [David Silver's RL Course](http://www0.cs.ucl.ac.uk/staff/D.Silver/web/Teaching.html)
 * [UC Berkeley's DRL Course](http://rll.berkeley.edu/deeprlcourse/)
 * [Nano de Freitas' ML Course](https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/)
+* [John Schulman's DRL Course](https://www.youtube.com/watch?v=aUrX-rP_ss4&t=2s)
+  - [Also: DRL lecture @ Bay Area Deep Learning School](https://www.youtube.com/watch?v=PtAIh9KSnjo)
+* [Emma Brunskill's Tutorials on RL](https://www.youtube.com/watch?v=fIKkhoI1kF4)
 
 ## Some Papers
 * Mnih et al (2013): [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602)
