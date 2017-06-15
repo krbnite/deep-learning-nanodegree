@@ -44,8 +44,9 @@ attained for making good decisions, which has to do with having a good policy.
 The goal is to find a policy that maximizes your reward.  To my mind, this resembles
 Lagrangians, Hamiltonians, and the principle of least action.
 
-## How to Figure Out a Good Policy
-The method we cover is Q-Learning.  It's pretty brute force: get in state s, try
+## Q-Learning
+The method we cover first is [Q-Learning](https://en.wikipedia.org/wiki/Q-learning).  
+It's pretty brute force: get in state s, try
 action a, and record the Q-value.  Since action a probably landed you a new state,
 s', try another action a' and record that Q-value.  Bumble around the state space
 in this manner for a long time and eventually you'll have a dependable (state, action)
@@ -62,18 +63,53 @@ just approximating it.  Can't we just use another approximation technique?
 This is where deep learning comes into reinforcement learning, and the answer is,
 "Yes we can!"
 
+## Deep Q Networks
+This was popularized as an [ATARI game-playing master](http://www.nature.com/nature/journal/v518/n7540/abs/nature14236.html).  
+though it is a "better-known RL algorithm" than policy gradients (discussed next), 
+[Karpathy says](http://karpathy.github.io/2016/05/31/rl/),
+"Q-Learning is not a great algorithm" and that "most people prefer to use Policy Gradients, 
+including the authors of the original DQN paper."
+
+### Discount Factor
+### Learning Rate
+### Exploration vs Exploitation
+
 ## Policy Gradients
 There are two algorithms in RL that crop up everywhere you look: policy gradients (PGs)
 and Q-learning.  [Karpathy says](http://karpathy.github.io/2016/05/31/rl/), "PG is preferred 
 because it is end-to-end: there’s an explicit policy and a principled approach that directly 
 optimizes the expected reward."
 
-## DQN
-This is an alternative to using policy gradients, popularized as an [ATARI game-playing master](http://www.nature.com/nature/journal/v518/n7540/abs/nature14236.html).  
-though it is a "better-known RL algorithm," [Karpathy says](http://karpathy.github.io/2016/05/31/rl/),
-"Q-Learning is not a great algorithm," and that "most people prefer to use Policy Gradients, 
-including the authors of the original DQN paper."
+## Credit Assignment 
+After many rejections, you finally land the job of your dreams.  Feels great, but could you do it 
+again?  Was it because you were charming, or because you were smart?  Was it because the company
+was desperate, or because you were the right person for the job?  Did all those rejections build
+character?  
 
+In RL, oftentimes a reward is delayed, and it is not automatically clear how to assign credit for
+the reward to the last N moves.  Is the reward exclusively a fruit of the last move, or was it
+due to a decision your agent made 17 moves back?  
+
+Policy gradients are a solution to this problem.
+
+## Advantage
+
+* [High-Dimensional Continuous Control Using Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438)
+  - Discusses general advantage functions
+
+## Weaknesses of RL: Brute force and without context
+Pong is easy.  But what about complex and strategic games, like Ocarina of Time?  A human can guess that 
+something a crazy villager said will come in handy at some later point in the game, or that a blue key
+likely fits into a blue door or a treasure chest made of ice. At the least, when a human sees something
+meaningful like a key, they
+know they should probably pick it up.  A human understands context, the basics
+of physics, and nuances that could easily fly above a brutish agent's head for the first bazillion policy 
+rollouts...
+
+A current research interest in artificial intelligence is how to supplement the brute power of existing
+methods with more elegant solutions motivated by the human mind.
+
+Here is a 2016 paper on that: [Building Machines That Learn and Think Like People](https://arxiv.org/abs/1604.00289)
 
 ## Competitor of DRL: Evolution Strategies
 * https://blog.openai.com/evolution-strategies/
