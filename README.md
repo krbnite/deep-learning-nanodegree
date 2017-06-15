@@ -10,3 +10,5 @@ http://blog.echen.me/2017/05/30/exploring-lstms/
 https://medium.com/@edersantana/how-do-self-driving-cars-drive-part-1-lane-keeping-assist-581f6ff50349
 
 
+### Re-implement DeepQ
+https://github.com/udacity/deep-learning/tree/master/reinforcement
