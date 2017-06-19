@@ -3,7 +3,12 @@
 * Project 2:  CNN in TensorFlow
 
 
-## Some reading material to get to...
+## Some reading material to re-read or get to...
+
+### The Deep Learning Book
+* http://www.deeplearningbook.org/
+  - Very thorough; worth looking over whenever you've got free time
+
 ### RNNs
 http://blog.echen.me/2017/05/30/exploring-lstms/
 ### Self-Driving Cars
