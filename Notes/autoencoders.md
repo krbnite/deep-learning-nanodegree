@@ -1,14 +1,47 @@
 
 
+An autoencoder is designed to reconstruct its input. In a sense, a perfect autoencoder
+would learn the identity function perfectly.  However, this is actually undesirable
+in that it indicates extreme overfitting to the training data set.  That is, though
+the autoencoder might learn to represent a faithful identity function on the training set,
+it will fail to act like the identity function on new data --- especially if that new
+data looks different than the training data.  Thus, autoencoders are not typically
+used to learn the identity function perfectly, but to learn useful 
+[representations](http://www.deeplearningbook.org/contents/representation.html)
+of the input data. In fact, learning the identity function is actively resisted
+using some form of regularization or constraint.  This ensures that the learned
+representation of the data is useful --- that it has learned the salient features
+of the input data and can generalize to new, unforeseen data.
 
+In Fourier analysis, learning a new representation is akin to mapping a time series into
+the frequency domain, where we learn amplitude and phase coefficients on
+a set of sinusoids that best represent the time series when summed.  However, the 
+autoencoder does not enforce the components of the representation to take on 
+any particular form, making its components more like empirical orthogonal functions
+(more popularly known as principle components).  In fact, a simple autoencoder can
+be used to mimic PCA (that is, to find a set of basis vectors that span the same space
+as the orthogonal basis identified in PCA).
 
-In the neural network lingo, an AE is a triplet like (encoder, decoder, loss function).  
-The encoder and decoder are both neural networks.  
+In the neural network lingo, an autoencoder consists of two neural networks 
+(the encoder and decoder) and a loss function.  The encoder maps the input
+into a latent space (a.k.a., hidden state, embedding), while the decoder 
+maps the latent space back into the original data space.  The encoder
+and decoder are laid out sequentially, giving the autoencoder the appearance
+of a multilayer perceptron (MLP), however it differs from the MLP in an
+important respect: it is unsupervised in that its output training data is
+its input.  
 
-The encoder is a projection operator (in QM lingo), or compression scheme (in DSP lingo).  
+Often, the encoder and decoder share weights, though
+[this is not a requirement](https://www.quora.com/Is-weight-sharing-required-for-an-autoencoder).
+If one uses weight sharing (sometimes referred to as tied weights), then
+the decoder can be thought of as the matrix transpose of the encoder. A benefit
+of weight sharing is that it injects some regularization into the model.
+
+In the most general sense, an encoder can map the data vectors to latent (hidden, embedded)
+vectors of the same dimension, of smaller dimension, or of higher dimension.  Most often, 
+encoder are used to map the input vectors to a lower-dimensional space.  In this case,
+the encoder can be thought of as a projection operator (in QM lingo), or compression scheme (in DSP lingo).  
 Its job is to project N-dimensional input onto a M-dimensional space, where M < N. 
-
-The decoder is just the encoder in reverse.  
 
 Example: One can "encode" (compress, project) the 3D representation of the 2-sphere, (x,y,z), to a
 2D representation (zenith, azimuth).  Similarly, one can "decode" (reconstruct) the polar
@@ -16,7 +49,20 @@ representation into the Cartesian representation.
 
 
 ## Variational AutoEncoders (VAEs)
-VAEs can be used to generate images, or to supplement reinforcement learning methods.
+Variational autoencoders (VAEs) are 
+[the lovechild of Bayesian inference and unsupervised deep learning](http://blog.fastforwardlabs.com/2016/08/12/introducing-variational-autoencoders-in-prose-and.html):
+>> "Variational Autoencoders (VAEs) incorporate regularization by explicitly learning the joint distribution over data and a set of latent variables that is most compatible with observed datapoints and some designated prior distribution over latent space. The prior informs the model by shaping the corresponding posterior, conditioned on a given observation, into a regularized distribution over latent space (the coordinate system spanned by the hidden representation)."
+
+XKCD: [Bayes Theorem](https://xkcd.com/1236/)
+
+VAEs can be used to 
+* generate images, audio, etc ([generative modeling](https://blog.openai.com/generative-models/))
+*  supplement reinforcement learning methods
+* recover the "true, lower-dimensional manifold" that the input data lives on ([manifold learning](http://scikit-learn.org/stable/modules/manifold.html))
+
+A VAE is a stochastic autoencoder --- that is, a vanilla autoencoder is deterministic, while
+a VAE introduces an element of stochasticity to this.
+
 
 ### Probabilistic Model Perspective
 A VAE can be considered a generative process (probability model) that emits observables, x, based on unobservable 
@@ -94,12 +140,18 @@ I twould be nice to re-visit it multiple times, and even extend it (e.g., w/ qua
 * 2014: Rezende et al: [Stochastic Back Propagation and Approximate Inference in Deep Generative Models](https://arxiv.org/abs/1401.4082)
 
 ### Some Links
+* [Introducing Variational Autoencoders in Prose](http://blog.fastforwardlabs.com/2016/08/12/introducing-variational-autoencoders-in-prose-and.html)
+  - Easy Mode Reading
+* [Building Autoencoders in Keras](https://blog.keras.io/building-autoencoders-in-keras.html)
 * [What is a Variational Autoencoder?](https://jaan.io/what-is-variational-autoencoder-vae-tutorial/)
   - bridges language gap between neural networks and probabilistic models
   - worth reading a couple more times, then building further bridges to quantum mechanical, digital signal processing, and/or manifold lingo
 * [Kullback-Leibler Divergence Explained](https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained)
   - discusses KL divergence
 * [Tutorial on Variational Autoencoders](https://arxiv.org/abs/1606.05908)
+* [Generative Models (OpenAI)](https://blog.openai.com/generative-models/)
+  - application of VAEs
+* [Graphical Models: Theory (blog.forty.to)](http://blog.forty.to/2013/08/24/graphical-models-theory/)
 
 
 
