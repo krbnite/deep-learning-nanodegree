@@ -55,10 +55,12 @@ Variational autoencoders (VAEs) are
 
 XKCD: [Bayes Theorem](https://xkcd.com/1236/)
 
-VAEs can be used to 
+AEs / VAEs can be used to 
 * generate images, audio, etc ([generative modeling](https://blog.openai.com/generative-models/))
-*  supplement reinforcement learning methods
+* supplement reinforcement learning methods
 * recover the "true, lower-dimensional manifold" that the input data lives on ([manifold learning](http://scikit-learn.org/stable/modules/manifold.html))
+* denoise images
+* for dimensionality reduction (pre-treatment, feature extraction)
 
 A VAE is a stochastic autoencoder --- that is, a vanilla autoencoder is deterministic, whereas
 a VAE introduces an element of stochasticity, treating its inputs, representations, and reconstructions 
@@ -167,6 +169,54 @@ I twould be nice to re-visit it multiple times, and even extend it (e.g., w/ qua
 ## VAEs in TensorFlow
 * [Variational Autoencoder in TensorFlow](https://jmetzen.github.io/2015-11-27/vae.html)
 * [Categorical Variational Autoencoders using Gumbel-Softmax](http://blog.evjang.com/2016/11/tutorial-categorical-variational.html)
+
+### Notes from Video Lecture
+We will create a simple autoencoder for MNIST digits.  Clearly, a convolutional/deconvolutional net
+would likely do well here, but we're developing a simple test case of an autoencoder, and will
+simply flatten the 28x28 images into 784-element vectors and use fully connected layers.
+
+```python
+%matplotlib inline  # if using Jupyter Notebook or Jupyter QTConsole
+import tensorflow as tf
+import matplotlib.pyplot as plt
+# Get Data
+from tensorflow.examples.tuturials.mnist import input_data
+mnist = input_data.read_data_sets('MNIST_data', validation_size=0)
+
+# Show an example MNIST digit
+img = mnist.train.images[2]
+plt.imshow(img.reshape((28,28)), cmap='Greys_r')
+
+# Definte code size (hidden layer dimensionality)
+encoding_dim = 32
+
+# Construct i/o placeholders
+inputs_ = tf.placeholder(dtype=tf.float32, shape=[28,28], name="inputs")
+targets_ = tf.placeholder(dtype=tf.float32, shape=[28,28], name="targets")
+
+# Create hidden layer output as a fully-connected
+#  -- default to relu activation
+#  -- options: 
+#     a. create using raw tf code
+#     b. use tf.layers.dense
+#     c. use tf.contrib.keras.layers.Dense
+#
+code = 
+
+# Create pre-output layer (i.e., the logit layer)
+#  -- the logit layer is fully connected w/ no activation
+#  -- the logit layer is used by the loss function, 
+#     tf.nn.sigmoid_cross_entropy_with_logits, to train the autoencoder 
+#  -- after training, to view image reconstructions (the autoencoder output),
+#     we have to manually apply the sigmoid activation to the logit layer
+
+# Loss function
+#  -- use cross_entropy loss, e.g., 
+#     tf.nn.sigmoid_cross_entropy_with_logits
+
+
+```
+
 
 ### References
 * 2013: Kingma & Welling: [Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114)
