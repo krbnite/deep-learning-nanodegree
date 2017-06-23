@@ -17,3 +17,6 @@ https://medium.com/@edersantana/how-do-self-driving-cars-drive-part-1-lane-keepi
 
 ### Re-implement DeepQ
 https://github.com/udacity/deep-learning/tree/master/reinforcement
+
+### Misc
+* [ReLU Was Yesterday, Tomorrow Comes ELU](http://www.picalike.com/blog/2015/11/28/relu-was-yesterday-tomorrow-comes-elu/)
