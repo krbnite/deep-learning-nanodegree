@@ -60,8 +60,36 @@ VAEs can be used to
 *  supplement reinforcement learning methods
 * recover the "true, lower-dimensional manifold" that the input data lives on ([manifold learning](http://scikit-learn.org/stable/modules/manifold.html))
 
-A VAE is a stochastic autoencoder --- that is, a vanilla autoencoder is deterministic, while
-a VAE introduces an element of stochasticity to this.
+A VAE is a stochastic autoencoder --- that is, a vanilla autoencoder is deterministic, whereas
+a VAE introduces an element of stochasticity, treating its inputs, representations, and reconstructions 
+as random variables within a [directed graphical model](http://blog.forty.to/2013/08/24/graphical-models-theory/).
+The trick is mostly in the latent space: instead of piping a latent representation into the decoder, we use a likely
+latent representation.  This is done by sampling from an approximated posterior distribution, q(z|x), where z
+is the latent representation and x is the input.  The approximated posterior distribution is found by
+learning the distribution's parameters (e.g., mean and stdDev for a Gaussian) at the latent layer, then
+sampling from that distribution to obtain the input into the decoder.
+
+This is a really F'n cool trick.  Think about it: in order for this autoencoder to really work well,
+the network will really have to learn that posterior probability distribution.  One can then apply
+Baye's theorem to get p(x|z) and sample from that distribution to generate realistic-looking synthetic 
+data.  But how "realistic" is realistic?  This is where generative adversarial networks would come into
+play by pitting a discriminator against this generator, allowing the two adversaries to compete, 
+try to learn each other's tricks, and try to outwit each other.  Theoretically, the generator will
+eventually learn to generate synthetic data that is so realistic looking that the discriminator can't
+tell the difference between real and fake data.  
+
+There are lessons to be learned here, folks: 
+1. In long-enough game of cops (discriminators) and robbers (generators), the robbers will ultimately outwit the cops.  
+2. Virtual reality (generator) will one day be indistinguishable from regular ol' reality to our senses (discriminator).
+3. Regular ol' reality could already be a virtual reality... We all lay in pergatory with a VR headset on, where
+a psychologist is evaluating whether we get to go to the loony bin or the VIP tropical resort.
+
+Anyway, this trick makes gradient descent's eyes cross, so another trick is introduced: the reparameterization trick!
+Instead of sampling z from q(z|x) ~ N(m,s^2), we define z as m + s\*e, where e ~ N(0,1).
+
+Viewing a VAE as both a probabilistic model and a deep neural network is important:
+* as a probabilistic graphical model, we ground the VAE is solid mathematical theory
+* as a neural network, we give the VAE all the computational benefits that have been created for deep learning
 
 
 ### Probabilistic Model Perspective
@@ -101,7 +129,9 @@ re-read "[What is a Variational Autoencoder?](https://jaan.io/what-is-variationa
 
 #### Kullback-Leibler Divergence
 The [KL Divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)
-measures how different one probability distribution is from another expected distribution.  
+measures how different one probability distribution is from another expected distribution. 
+It is known as [relative entropy](http://mathworld.wolfram.com/RelativeEntropy.html) in 
+physics.
 
 Basically, we often approximate stochastic processes as drawing from a familiar probability 
 distribution, like a Normal or Log-Normal distribution.  For example, if an empirical
@@ -134,6 +164,9 @@ Again, can't stress how good this article is:  [What is a Variational Autoencode
 I twould be nice to re-visit it multiple times, and even extend it (e.g., w/ quantum mechanical lingo, or DSP).
 
 
+## VAEs in TensorFlow
+* [Variational Autoencoder in TensorFlow](https://jmetzen.github.io/2015-11-27/vae.html)
+* [Categorical Variational Autoencoders using Gumbel-Softmax](http://blog.evjang.com/2016/11/tutorial-categorical-variational.html)
 
 ### References
 * 2013: Kingma & Welling: [Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114)
@@ -142,7 +175,14 @@ I twould be nice to re-visit it multiple times, and even extend it (e.g., w/ qua
 ### Some Links
 * [Introducing Variational Autoencoders in Prose](http://blog.fastforwardlabs.com/2016/08/12/introducing-variational-autoencoders-in-prose-and.html)
   - Easy Mode Reading
+  - Great read!
+* [Under the hood of the Variational Autoencoder](http://blog.fastforwardlabs.com/2016/08/22/under-the-hood-of-the-variational-autoencoder-in.html)
+  - Technical follow-up to "Introducing VAEs in Prose"
+  - Example implementation of a VAE on MNIST in TensorFlow
+  - Read again w/ more note taking...
 * [Building Autoencoders in Keras](https://blog.keras.io/building-autoencoders-in-keras.html)
+  - I use tf.contrib.keras
+  - Still haven't really figured out if this offers any advantage over just using keras
 * [What is a Variational Autoencoder?](https://jaan.io/what-is-variational-autoencoder-vae-tutorial/)
   - bridges language gap between neural networks and probabilistic models
   - worth reading a couple more times, then building further bridges to quantum mechanical, digital signal processing, and/or manifold lingo
