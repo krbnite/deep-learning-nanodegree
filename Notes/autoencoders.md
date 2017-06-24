@@ -194,14 +194,17 @@ encoding_dim = 32
 inputs_ = tf.placeholder(dtype=tf.float32, shape=[28,28], name="inputs")
 targets_ = tf.placeholder(dtype=tf.float32, shape=[28,28], name="targets")
 
-# Create hidden layer output as a fully-connected
+# Create hidden layer output as a fully-connected layer
 #  -- default to relu activation
 #  -- options: 
 #     a. create using raw tf code
 #     b. use tf.layers.dense
 #     c. use tf.contrib.keras.layers.Dense
 #
-code = 
+w_h = tf.Variable( tf.truncated_normal(shape=[784,32], dtype=tf.float32, name="w_h" )
+b_h = tf.Variable( tf.zeros(shape=[None,32], dtype=tf.float32, name="b_h"
+flattened_input = tf.reshape(inputs_, [-1])
+code = tf.relu(tf.matmul(flattened_input, w_h)+b+h)
 
 # Create pre-output layer (i.e., the logit layer)
 #  -- the logit layer is fully connected w/ no activation
