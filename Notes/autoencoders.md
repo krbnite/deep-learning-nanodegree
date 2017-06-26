@@ -170,7 +170,7 @@ I twould be nice to re-visit it multiple times, and even extend it (e.g., w/ qua
 * [Variational Autoencoder in TensorFlow](https://jmetzen.github.io/2015-11-27/vae.html)
 * [Categorical Variational Autoencoders using Gumbel-Softmax](http://blog.evjang.com/2016/11/tutorial-categorical-variational.html)
 
-### Notes from Video Lecture
+### Simple Autoencoder (Notes from Lecture)
 We will create a simple autoencoder for MNIST digits.  Clearly, a convolutional/deconvolutional net
 would likely do well here, but we're developing a simple test case of an autoencoder, and will
 simply flatten the 28x28 images into 784-element vectors and use fully connected layers.
@@ -189,10 +189,11 @@ plt.imshow(img.reshape((28,28)), cmap='Greys_r')
 
 # Definte code size (hidden layer dimensionality)
 encoding_dim = 32
+image_size = mnist.training.images.shape[1]
 
 # Construct i/o placeholders
-inputs_ = tf.placeholder(dtype=tf.float32, shape=[28,28], name="inputs")
-targets_ = tf.placeholder(dtype=tf.float32, shape=[28,28], name="targets")
+inputs_  = tf.placeholder(tf.float32, shape=[None,image_size], name="inputs")
+targets_ = tf.placeholder(tf.float32, shape=[None,image_size], name="targets")
 
 # Create hidden layer output as a fully-connected layer
 #  -- default to relu activation
@@ -201,10 +202,7 @@ targets_ = tf.placeholder(dtype=tf.float32, shape=[28,28], name="targets")
 #     b. use tf.layers.dense
 #     c. use tf.contrib.keras.layers.Dense
 #
-w_h = tf.Variable( tf.truncated_normal(shape=[784,32], dtype=tf.float32, name="w_h" )
-b_h = tf.Variable( tf.zeros(shape=[None,32], dtype=tf.float32, name="b_h"
-flattened_input = tf.reshape(inputs_, [-1])
-code = tf.relu(tf.matmul(flattened_input, w_h)+b+h)
+encoded = tf.layers.dense(inputs_, encoding_dim, activation=tf.nn.relu)
 
 # Create pre-output layer (i.e., the logit layer)
 #  -- the logit layer is fully connected w/ no activation
@@ -212,14 +210,132 @@ code = tf.relu(tf.matmul(flattened_input, w_h)+b+h)
 #     tf.nn.sigmoid_cross_entropy_with_logits, to train the autoencoder 
 #  -- after training, to view image reconstructions (the autoencoder output),
 #     we have to manually apply the sigmoid activation to the logit layer
+logits = tf.layers.dense(encoded, image_size, activate=None)
+decoded = tf.nn.sigmoid(logits, name="output")
 
 # Loss function
 #  -- use cross_entropy loss, e.g., 
 #     tf.nn.sigmoid_cross_entropy_with_logits
+loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=targets_, logits=logits)
+cost = tf.reduce_mean(loss)
+opt = tf.train.AdamOptimizer(0.001).minimize(cost)
 
+# Training
+sess = tf.Session()
+epochs = 20
+batch_size = 200
+sess.run(tf.global_variables_initializer())
+for e in range(epochs):
+    for idx in range(mnist.train.num_examples//batch_size):
+        batch = mnist.train.next_batch(batch_size)
+        # Autoencoders have same input & output!
+        feed = {inputs_: batch[0], targets_: batch[0]}
+        batch_cost, _ = sess. run([cost, opt], feed_dict=feed)
+        print("Epoch: {}/{}...".format(e+1, epochs),
+            "Training Loss: {:.4f}".format(batch_cost))
+ 
+# Figures
+fig, axes = plt.subplots(nrows=2, ncols=10, sharex=True, sharey=True, .........)
+in_imgs = mnist.test.images[:10]
+reconstructed, compressed = sess.run([decoded, encoded], feed_dict={inputs_:.......})
+for images, row in zip([in_imgs, reconstructed], axes):
+    for img, ax in zip(images, row):
+        ax.imshow(img.reshape((28,28), cmap='Greys_r')
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
+fig.tight_layout(pad=0.1)
 
+# Close TF Session
+sess.close()
 ```
+### Convolutional Autoencoder
 
+
+```python
+%matplotlib inline
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+# Data
+from tensorflow.examples.tutorials.mnist import input_data
+mnist = input_data.read_data_sets('MNIST_data', validation_size=0)
+
+# Example Image
+img = mnist.train.images[2]
+plt.imshow(img.reshape((28,28)), cmap='Greys_r')
+
+#
+learning_rate = 0.001
+inputs_ = tf.placeholder(tf.float32, (None,28,28,1), name="inputs")
+targets_ = tf.placeholder(tf.float32, (None,28,28,1), name="targets")
+
+### Encoder
+# The image begins as 28x28x1:  
+conv1 = tf.layers.conv2d(inputs_, 16, (3,3), padding='same', activation=tf.nn.relu)
+#  -- 28x28x16 after 1st conv layer
+maxpool1 = tf.layers.max_pooling2d(conv1, (2,2), (2,2), padding='same')
+#  -- 14x14x16 after max pooling 
+conv2 = tf.layers.conv2d(maxpool1, 8, (3,3), padding='same', activation=tf.nn.relu)
+#  -- 14x14x8 after 2nd conv layer
+maxpool2 = tf.layers.max_pooling2d(conv2, (2,2), (2,2), padding='same')
+#  -- 7x7x8 after max pooling
+conv3 = tf.layers.conv2d(maxpool2, 8, (3,3), padding='same', activation=tf.nn.relu)
+#  -- still 7x7x8
+encoded = tf.layers.max_pooling2d(conv3, (2,2), (2,2), padding='same')
+#  -- the final image code is 4x4x8
+
+### Decoder
+#  -- the code begins as 4x4x8
+upsample1 = tf.image.resize_nearest_neighbor(encoded, (7,7))
+#  -- 7x7x8 after upsample
+conv4 = tf.layers.conv2d(upsample1, 8, (3,3), padding='same', activation=tf.nn.relu)
+#  -- still 7x7x8
+upsample2 = tf.image.resize_nearest_neighbor(conv4, (14,14))
+#  -- 14x14x8 after upsampling
+conv5 = tf.layers.conv2d(upsample2, 8, (3,3), padding='same', activation=tf.nn.relu)
+#  -- still 14x14x8
+upsample3 = tf.image.resize_nearest_neighbor(conv5, (28,28))
+#  -- 28x28x8 after upsampling
+conv6 = tf.layers.conv2d(upsample3, 16, (3,3), padding='same', activation=tf.nn.relu)
+#  -- 28x28x16 after deconvolution 
+
+### Logits and Decoded Image
+logits = tf.layers.conv2d(conv6, 1, (3,3), padding='same', activation=None)
+#  -- 28x28x1 after deconvolution
+decoded = tf.nn.sigmoid(logits, name="decoded")
+
+### XE Loss, Cost, and Optimization
+loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=targets_, logits=logits)
+cost = tf.reduce_mean(loss)
+opt = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+
+### Train
+sess = tf.Session()
+epochs = 20
+batch_size = 200
+sess.run(tf.global_variables_initializer())
+for e in range(epochs):
+    for idx in range(mnist.train.num_examples // batch_size):
+        batch = mnist.train.next_batch(batch_size)
+        imgs = batch[0].reshape((-1, 28, 28, 1))
+        batch_cost, _ = sess.run([cost, opt], feed_dict = {inputs_: imgs, targets_: imgs})
+        print("Epoch: {}/{}...".format(e+1, epochs),
+            "Training Loss: {:4f}".format(batch_cost))
+ 
+ ### Figs
+ # same as above
+ sess.close()
+ ```
+ 
+ ### Denoising...
+ 
+
+
+Further Reading
+* [Deconvolution and Checkerboard Artifacts](http://distill.pub/2016/deconv-checkerboard/)
+
+---------------------------------------------------------------
 
 ### References
 * 2013: Kingma & Welling: [Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114)
