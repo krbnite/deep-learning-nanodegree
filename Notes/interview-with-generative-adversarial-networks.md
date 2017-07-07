@@ -1,4 +1,8 @@
 
+I might have been going crazy this day... :-p
+
+
+-------------------------------------------------------------------------------
 
 ## What can you do w/ GANs?
 GANs can be used to generate realistic data.  In practice, this property has been mostly
