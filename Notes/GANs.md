@@ -14,7 +14,7 @@ right now.
 GANs are hard to train, thus using an appropriate architecture becomes essential.  For small images,
 you might be able to get away with fully-connected layers.  
 
-![fcGAN](./assets/fcGAN.png)
+![fcGAN](../assets/fcGAN.png)
 
 * discriminator and generator should both have at least one hidden layer 
   - this ensures both layers have the universal approximation property and, thus, can approximate any probability distribution
@@ -29,4 +29,15 @@ you might be able to get away with fully-connected layers.
 ## Large Images: Fully-Connected Layers are NOT OK!
 To scale up to large images, we must use convolutional networks.  
 
-![conGAN](./assets/convGAN.png)
+![conGAN](../assets/convGAN.png)
+
+
+## Intro to GANs Exercize
+* see miniprojects
+* [paper](https://arxiv.org/pdf/1606.03498.pdf) on making better images than produced in the exercize
+* going further: 
+  - add more layers to discriminator and generator: what happens?  
+  - at 3 layers, network can no longer train: try batch normalization
+  - [paper](https://arxiv.org/abs/1502.03167) on batch normalization
+
+
